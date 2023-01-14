@@ -9,6 +9,9 @@
 
 char here[]="C://Users/maryam/Desktop/project";
 char here_with_root[] ="C://Users/maryam/Desktop/project/root";
+char clipboard[1000];
+
+
 //-------------type of error-----------------
 /*
 -1:command is not valid
@@ -93,11 +96,6 @@ char *str_replace(char *orig, char *rep, char *with) {
     if (!result)
         return NULL;
 
-    // first time through the loop, all the variable are set correctly
-    // from here on,
-    //    tmp points to the end of the result string
-    //    ins points to the next occurrence of rep in orig
-    //    orig points to the remainder of orig after "end of rep"
     while (count--) {
         ins = strstr(orig, rep);
         len_front = ins - orig;
@@ -225,7 +223,6 @@ int create_file(char str[]){
         err = make_path(address);
         if(err == 1){
             FILE *fp;
-            address[strlen(address) -1] = '\0';
             fp  = fopen(address, "w");
             fclose(fp);
             err = check_file_exsit(address);
@@ -506,6 +503,7 @@ int remove_from_file(char sss[],char address[],int line,int pos,int size,char wh
     int c_p=0;
     int start=0;
     int end = 0;
+    int check =0;
     int count = strlen(sss);
     char before[3000]="\0",after[3000]="\0",result[4000]="\0";
     int pos_pos = 0;
@@ -513,6 +511,7 @@ int remove_from_file(char sss[],char address[],int line,int pos,int size,char wh
     for(int i = 0;i < count;i++){
         if(c_p == pos && c_line == line){
             pos_pos = i;
+            check =1;
             break;
         }
         if(sss[i] == '\n'){
@@ -522,6 +521,12 @@ int remove_from_file(char sss[],char address[],int line,int pos,int size,char wh
             c_p++;
         }
     }
+    
+    if(!check){
+        return -5;
+    }
+
+
     if(which =='b'){
         start = pos_pos - size;
         end = pos_pos - 1;
@@ -586,6 +591,221 @@ int remove_str(char str[]){
     char sss[2000]="\0";
     cat(str,sss);
     err = remove_from_file(sss,address,line,pos,size,which);
+    if(err != 1){
+        return err;
+    }
+    return 1;
+}
+
+int copy_to_clipboard(char sss[],char address[],int line, int pos, int size, char which){
+    int c_line=1;
+    int c_p=0;
+    int start=0;
+    int end = 0;
+    int check = 0;
+    int count = strlen(sss);
+    char before[3000]="\0",after[3000]="\0",result[4000]="\0";
+    int pos_pos = 0;
+    int len=0;
+    for(int i = 0;i < count;i++){
+        if(c_p == pos && c_line == line){
+            pos_pos = i;
+            check =1;
+            break;
+        }
+        if(sss[i] == '\n'){
+            c_line++;
+            c_p = 0;
+        }else{
+            c_p++;
+        }
+    }
+
+    if(!check){
+        return -5;
+    }
+
+    if(which =='b'){
+        start = pos_pos - size;
+        end = pos_pos - 1;
+    }else{
+        start = pos_pos;
+        end = pos_pos + size - 1;
+    }
+    if(start < 0){
+        start = 0;
+    }
+    if(end >= count){
+        end = count - 1;
+    }
+    clipboard[0]='\0';
+    for (int i = start; i <= end; i++){
+        clipboard[len] = sss[i];
+        len++;
+        clipboard[len]='\0';
+    }
+    return 1;
+}
+
+int copy_str(char str[]){
+    char address[1000];
+    char * r_str = str_replace(str,"\\\"","*qot*");
+    r_str = str_replace(r_str,"\\\\n","*main_newline*");
+    r_str = str_replace(r_str,"\\n","*newline*");
+    strcpy(str,r_str);
+    int err = compile_address(str,address);
+    if(err != 1){
+        return err;
+    }
+    if(check_file_exsit(address) == 0){
+        return -6;
+    }
+    int line,pos,size;
+    char which;
+    err = get_pos(str,&line,&pos);
+    if(err != 1){
+        return err;
+    }
+    err = get_size(str,&size);
+    if(err != 1){
+        return err;
+    }
+    err = get_bf(str,&which);
+    if(err != 1){
+        return err;
+    }
+    char sss[2000]="\0";
+    cat(str,sss);
+    err = copy_to_clipboard(sss,address,line,pos,size,which);
+    if(err != 1){
+        return err;
+    }
+    return 1;
+}
+
+int cut_to_clipboard(char sss[],char address[],int line, int pos, int size, char which){
+    int c_line=1;
+    int c_p=0;
+    int start=0;
+    int end = 0;
+    int check = 0;
+    int count = strlen(sss);
+    char before[3000]="\0",after[3000]="\0",result[4000]="\0";
+    int pos_pos = 0;
+    int len_b=0,len_a=0,len =0;
+    for(int i = 0;i < count;i++){
+        if(c_p == pos && c_line == line){
+            pos_pos = i;
+            check = 1;
+            break;
+        }
+        if(sss[i] == '\n'){
+            c_line++;
+            c_p = 0;
+        }else{
+            c_p++;
+        }
+    }
+
+    if(!check){
+        return -5;
+    }
+
+    if(which =='b'){
+        start = pos_pos - size;
+        end = pos_pos - 1;
+    }else{
+        start = pos_pos;
+        end = pos_pos + size - 1;
+    }
+    if(start < 0){
+        start = 0;
+    }
+    if(end >= count){
+        end = count - 1;
+    }
+    clipboard[0]='\0';
+    for (int i = 0; i < count; i++)
+    {
+        if(i < start){
+            before[len_b] = sss[i];
+            len_b++;
+            before[len_b]='\0';
+        }else if( end < i){
+            after[len_a]= sss[i];
+            len_a++;
+            after[len_a] ='\0';
+        }else{
+            clipboard[len] = sss[i];
+            len++;
+            clipboard[len]='\0';
+        }
+    }
+    strcat(result,before);
+    strcat(result,after);
+
+    FILE* fp = fopen(address, "w");
+    fputs(result,fp);
+    fclose(fp);
+    return 1;
+}
+
+int cut_str(char str[]){
+    char address[1000];
+    char * r_str = str_replace(str,"\\\"","*qot*");
+    r_str = str_replace(r_str,"\\\\n","*main_newline*");
+    r_str = str_replace(r_str,"\\n","*newline*");
+    strcpy(str,r_str);
+    int err = compile_address(str,address);
+    if(err != 1){
+        return err;
+    }
+    if(check_file_exsit(address) == 0){
+        return -6;
+    }
+    int line,pos,size;
+    char which;
+    err = get_pos(str,&line,&pos);
+    if(err != 1){
+        return err;
+    }
+    err = get_size(str,&size);
+    if(err != 1){
+        return err;
+    }
+    err = get_bf(str,&which);
+    if(err != 1){
+        return err;
+    }
+    char sss[2000]="\0";
+    cat(str,sss);
+    err = cut_to_clipboard(sss,address,line,pos,size,which);
+    if(err != 1){
+        return err;
+    }
+    return 1;
+}
+
+int paste_str(char str[]){
+    char address[1000];
+    char str1[1000];
+    char * r_str = str_replace(str,"\\\"","*qot*");
+    r_str = str_replace(r_str,"\\\\n","*main_newline*");
+    r_str = str_replace(r_str,"\\n","*newline*");
+    strcpy(str,r_str);
+    int err = compile_address(str,address);
+    if(err != 1){
+        return err;
+    }
+    if(check_file_exsit(address) == 0){
+        return -6;
+    }
+    int line=1,pos=0;
+    err = get_pos(str,&line,&pos);
+    if(err != 1){
+        return err;
+    }
+    err = insert_to_file(address,clipboard,line,pos);
     if(err != 1){
         return err;
     }
@@ -666,6 +886,30 @@ void check_the_command(char str[]){
                 printf("removed successfully!\n");
             }
             
+        }else if(strcmp(token,"copystr") == 0){
+            int err = copy_str(str);
+            if (err != 1){
+                handle_err(err);
+            }else{
+                printf("copied to clipboard successfully!\n");
+            }
+            
+        }else if(strcmp(token,"cutstr") == 0){
+            int err = cut_str(str);
+            if (err != 1){
+                handle_err(err);
+            }else{
+                printf("cut to clipboard successfully!\n");
+            }
+            
+        }else if(strcmp(token,"pastestr") == 0){
+            int err = paste_str(str);
+            if (err != 1){
+                handle_err(err);
+            }else{
+                printf("paste successfully!\n");
+            }
+            
         }else{
             handle_err(-1);
         }
@@ -678,7 +922,10 @@ int main(){
     fgets(str,1000,stdin);
     while (strcmp(str,"stop\n") != 0)
     {
-        str[strlen(str)-1] = ' ';
+        if(str[strlen(str)-1] == '\n'){
+            str[strlen(str)-1] = '\0';
+        }
+        
         check_the_command(str);
         fgets(str,1000,stdin);
     }
