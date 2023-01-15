@@ -7,10 +7,10 @@
 #include<error.h>
 
 
-char here[]="C://Users/maryam/Desktop/project";
-char here_with_root[] ="C://Users/maryam/Desktop/project/root";
+char here[1000];
+char here_with_root[1000];
 char clipboard[1000];
-
+int valid = 0;
 
 //-------------type of error-----------------
 /*
@@ -34,8 +34,9 @@ int make_path(char address[]){
     strcpy(add,here_with_root);
     strcpy(need,address);
     char *ptr = need;
-    ptr += 38;
+    ptr += strlen(here_with_root);
     char *token = strtok(ptr,"/");
+    valid = 0;
     while(1)
     {
         char save[100];
@@ -44,7 +45,10 @@ int make_path(char address[]){
         if(token == NULL){
             char * ss_ptr = strchr(save,'.');
             if(ss_ptr == NULL){
-                return -3;
+                strcat(add,"/");
+                strcat(add,save);
+                mkdir(add);
+                valid = 1;
             }
             break;
         }
@@ -226,7 +230,8 @@ int create_file(char str[]){
             fp  = fopen(address, "w");
             fclose(fp);
             err = check_file_exsit(address);
-            if(!err){
+            if(!err && valid == 0){
+                valid = 0;
                 return -1;
             }
             return 1; 
@@ -916,9 +921,19 @@ void check_the_command(char str[]){
     }
 }
 
+void make_here_root(){
+    getcwd(here,1000);
+    char * ptr = str_replace(here,"\\","/");
+    strcpy(here,ptr);
+    strcpy(here_with_root,ptr);
+    strcat(here_with_root,"/root");
+    printf("%s\n%s\n",here,here_with_root);
+}
+
 int main(){
     char add[1000];
     char str[1000];
+    make_here_root();
     fgets(str,1000,stdin);
     while (strcmp(str,"stop\n") != 0)
     {
