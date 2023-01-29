@@ -1972,7 +1972,7 @@ int replace_regex(char address[], char pattern[],char str2[],long long at,int ha
     return 1;
 }
 
-int replace_str(char str[]){
+int replace_str(char str[],int is_arman){
     char address[1000];
     char str1[1000];
     char str2[1000];
@@ -1991,11 +1991,14 @@ int replace_str(char str[]){
     if((err= check_file_exist(address)) != 1){
         return err;
     }
-    
-    err = compile_str1(str,str1);
-    if(err != 1){
-        return err;
+
+    if(!is_arman){
+        err = compile_str1(str,str1);
+        if(err != 1){
+            return err;
+        }
     }
+    
     
     err = compile_str2(str,str2);
     if(err != 1){
@@ -2018,7 +2021,14 @@ int replace_str(char str[]){
     if(is_all){
         at = 0;
     }
-    err = replace_regex(address,str1,str2,at,is_all);
+
+
+    if(is_arman){
+        err = replace_regex(address,arman,str2,at,is_all);
+    }else{
+        err = replace_regex(address,str1,str2,at,is_all);
+    }
+    
     if(err != 1){
         return err;
     }
@@ -3228,10 +3238,10 @@ int handle_arman(char str[]){
 
  
 
-    if(strcmp(token1 ,"tree") != 0 && strcmp(token1 ,"cat") != 0 && strcmp(token1 ,"grep") != 0 && strcmp(token1 ,"find") != 0){
+    if(strcmp(token1 ,"tree") != 0 && strcmp(token1 ,"cat") != 0 && strcmp(token1 ,"grep") != 0 && strcmp(token1 ,"find") != 0 && strcmp(token1 ,"compare") != 0){
         return -1;
     }
-    if(strcmp(token2 ,"insertstr") != 0 && strcmp(token2 ,"grep") != 0 && strcmp(token2 ,"find") != 0){
+    if(strcmp(token2 ,"insertstr") != 0 && strcmp(token2 ,"grep") != 0 && strcmp(token2 ,"find") != 0 && strcmp(token2 ,"replace") != 0){
         return -1;
     }
 
@@ -3257,6 +3267,11 @@ int handle_arman(char str[]){
         }
     }else if(strcmp(token1,"find") == 0){
         int err = find_str(cmd1,0);
+        if (err != 1){
+            return err;
+        }
+    }else if(strcmp(token1,"compare") == 0){
+        int err = compare_files(cmd1);
         if (err != 1){
             return err;
         }
@@ -3293,7 +3308,16 @@ int handle_arman(char str[]){
         }else{
             printf("%s\n",output);
         }
+    }else if(strcmp(token2,"replace") == 0){
+        int err = replace_str(cmd2,1);
+        if (err != 1){
+            return err;
+        }else{
+            printf("replaced successfully!\n");
+        }
+        
     }
+
     return 1;
 }
 
@@ -3419,7 +3443,7 @@ void check_the_command(char str[]){
             }
             
         }else if(strcmp(token,"replace") == 0){
-            int err = replace_str(str);
+            int err = replace_str(str,0);
             if (err != 1){
                 handle_err(err);
             }else{
