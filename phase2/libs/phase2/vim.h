@@ -15,26 +15,27 @@ char **vim_str;
 
 
 void vim_set_str(){
-    vim_str = (char **) malloc(vim_lines * sizeof(char *));
-    for(int i=0; i< vim_lines ; i++){
-        vim_str[i] = malloc(vim_cols * sizeof(char));
+    vim_str = (char **) malloc((vim_lines + 1)* sizeof(char *));
+    for(int i=0; i<=vim_lines ; i++){
+        vim_str[i] = malloc((vim_cols + 1) * sizeof(char));
     } 
 }
 
 void vim_edit_str_lines(int lines){
-    vim_str = realloc(vim_str,lines * sizeof(char *));
-    for(int i = vim_lines ; i <= lines; i++){
+    printf("h\n");
+    vim_str = realloc(vim_str,lines * 5 * sizeof(char *));
+    for(int i = vim_lines ; i <= lines * 5; i++){
         vim_str[i] = malloc(vim_cols * sizeof(char));
     } 
-    vim_lines = lines;
+    vim_lines = lines * 5;
 }
 
 void vim_edit_str_cols(int cols){
 
     for(int i = 0 ; i < vim_lines; i++){
-        vim_str[i] = realloc(vim_str[i],cols * sizeof(char));
+        vim_str[i] = realloc(vim_str[i],cols * 5 * sizeof(char));
     } 
-    vim_cols = cols;
+    vim_cols = cols * 5;
 
 }
 
@@ -72,16 +73,15 @@ void vim_make_screen_1(){
             break;
         }
 
-        if(line > vim_lines){
+        if(line >= vim_lines){
             vim_edit_str_lines(line);
         }
 
-        if(pos > vim_cols){
+        if(pos >= vim_cols){
             vim_edit_str_cols(pos);
         }
 
         if(ch == '\n'){
-            vim_str[line][pos] = ch;
             line++;
             pos = 0;
             count++;
@@ -90,11 +90,12 @@ void vim_make_screen_1(){
 
         vim_str[line][pos] = ch;
         pos++;
+        count++;
     }
-
+    str_lines = line;
     move(0,0);
     if(line > LINES - 3){
-        for(int i = 0; i < LINES - 3;i++){
+        for(int i = 0; i <= LINES - 3;i++){
             printw("%6.d | %s",i+1,vim_str[i]);
             move(i+1,0);
         }
@@ -105,7 +106,7 @@ void vim_make_screen_1(){
         }
         init_pair(3,COLOR_BLUE, COLOR_BLACK);
         attron(COLOR_PAIR(3));
-        for(int i = 0; i < LINES - 3;i++){
+        for(int i = line; i <= LINES - 3;i++){
             printw("~\n");
             move(i+1,0);
         }
@@ -117,5 +118,13 @@ void vim_make_screen_1(){
 void vim_make_screen_2(){
     move(0,0);
     printw("%6.d | ",1);
+    init_pair(3,COLOR_BLUE, COLOR_BLACK);
+    attron(COLOR_PAIR(3));
+    move(1,0);
+    for(int i = 1; i <= LINES - 3;i++){
+        printw("~\n");
+        move(i+1,0);
+    }
+    attroff(COLOR_PAIR(3));
     refresh();
 }
