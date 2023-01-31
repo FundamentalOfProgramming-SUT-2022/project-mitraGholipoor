@@ -3,3 +3,5 @@
 #include "phase2/insert.h"
 #include "phase2/remove.h"
 #include "phase2/selection.h"
+#include "phase2/copy.h"
+#include "phase2/cut.h"

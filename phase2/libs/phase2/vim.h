@@ -7,11 +7,11 @@ char vim_bs_name[1000];
 char vim_save_address[] = "./.vim.txt";
 int has_name = 0;
 
-int str_lines = 0;
+long long str_lines = 0;
 int vim_end_screen;
 int vim_diff = 0;
 
-int vim_lines = 100;
+long long vim_lines = 100;
 int vim_cols = 100;
 int vim_mode = 0;
 int vim_save = 0;
@@ -19,14 +19,13 @@ int vim_save = 0;
 char **vim_str;
 
 
-int vir_x = 0;
-int vir_y = 0;
+long long vir_x = 0;
+long long vir_y = 0;
 
-int vir_x_start = 0;
-int vir_y_start = 0;
+long long vir_x_start = 0;
+long long vir_y_start = 0;
 
 
-int ** vir_coor;
 int vim_selected = 0;
 
 void vim_make_str(){
@@ -42,20 +41,6 @@ void vim_make_str(){
 
 }
 
-void vim_make_vir_coor(){
-
-    if(vir_coor!= NULL){
-        free(vir_coor);
-    }
-
-    vir_coor = (int **) calloc((str_lines + 1), sizeof(int *));
-
-    for(int i=0; i <= str_lines ; i++){
-        vir_coor[i] = calloc((vim_cols + 2) , sizeof(int));
-    }
-
-}
-
 void vim_edit_str_lines(int lines){
 
     vim_str = realloc(vim_str,lines * 5 * sizeof(char *));
@@ -63,6 +48,11 @@ void vim_edit_str_lines(int lines){
         vim_str[i] = malloc((vim_cols + 2) * sizeof(char));
     } 
     vim_lines = lines * 5;
+}
+
+void clear_cmd_bar(){
+    move(LINES - 1,0);
+    deleteln();
 }
 
 void make_vim_file(){

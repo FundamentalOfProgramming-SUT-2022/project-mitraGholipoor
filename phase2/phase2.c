@@ -11,6 +11,7 @@ insert mode: i
 virtual mode: v
 back to normal :ESC
 
+
 */
 
 
@@ -31,8 +32,14 @@ int main(int argc, char *argv[]){
 	init_win_layout(argc,argv);
 
 	while(1){
+
 		ch = getch();
 		getyx(stdscr, y, x);
+		clear_cmd_bar();
+		move(y,x);
+		refresh();
+
+
 		if(ch == KEY_RIGHT || ch == KEY_LEFT || ch == KEY_UP || ch == KEY_DOWN){
 			vim_handle_navbar(ch);
 		}else if(ch == 27){
@@ -58,7 +65,6 @@ int main(int argc, char *argv[]){
 			vir_y = y + vim_diff;
 			vir_x = x - 8;
 			vim_make_vim_mode();
-			vim_make_vir_coor();
 			move(y,x);
 			refresh();
 		}else if(vim_mode == 1 && ch == 8){
@@ -92,11 +98,29 @@ int main(int argc, char *argv[]){
 			}
 		}
 
-		if(vim_mode == 2){
+		if(vim_mode == 2 && (ch == KEY_RIGHT || ch == KEY_LEFT || ch == KEY_UP || ch == KEY_DOWN)){
 			int xx,yy;
 			getyx(stdscr,yy,xx);
 			select_virtual_area(yy,xx);
 			move(yy,xx);
+			refresh();
+		}else if(vim_mode == 2 && ch == 'y'){
+			vim_copy();
+		}else if(vim_mode == 2 && ch == 'd'){
+			vim_cut();
+			set_str_from_vim();
+			if(vim_diff){
+				vim_make_screen();
+			}else{
+				vim_make_screen_1();
+			}
+			vim_mode = 0;
+			delete_virtual();
+			vim_make_vim_mode();
+			move(0,8);
+			if(str_lines > 4){
+				move(4,8);
+			}
 			refresh();
 		}
 		
