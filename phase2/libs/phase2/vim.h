@@ -5,7 +5,6 @@
 char vim_address[1000];
 char vim_bs_name[1000];
 char vim_save_address[] = "./.vim.txt";
-
 int has_name = 0;
 
 int str_lines = 0;
@@ -18,9 +17,17 @@ int vim_mode = 0;
 int vim_save = 0;
 
 char **vim_str;
-char **vim_str_save;
 
 
+int vir_x = 0;
+int vir_y = 0;
+
+int vir_x_start = 0;
+int vir_y_start = 0;
+
+
+int ** vir_coor;
+int vim_selected = 0;
 
 void vim_make_str(){
 
@@ -28,11 +35,23 @@ void vim_make_str(){
     vim_cols = COLS - 9;
 
     vim_str = (char **) malloc((vim_lines + 1)* sizeof(char *));
-    vim_str_save = (char **) malloc((vim_lines + 1)* sizeof(char *));
 
     for(int i=0; i<=vim_lines ; i++){
         vim_str[i] = malloc((vim_cols + 2) * sizeof(char));
-        vim_str_save[i] = malloc((vim_cols + 2) * sizeof(char));
+    }
+
+}
+
+void vim_make_vir_coor(){
+
+    if(vir_coor!= NULL){
+        free(vir_coor);
+    }
+
+    vir_coor = (int **) calloc((str_lines + 1), sizeof(int *));
+
+    for(int i=0; i <= str_lines ; i++){
+        vir_coor[i] = calloc((vim_cols + 2) , sizeof(int));
     }
 
 }
@@ -40,10 +59,8 @@ void vim_make_str(){
 void vim_edit_str_lines(int lines){
 
     vim_str = realloc(vim_str,lines * 5 * sizeof(char *));
-    vim_str_save = realloc(vim_str_save,lines * 5 * sizeof(char *));
     for(int i = vim_lines ; i <= lines * 5; i++){
         vim_str[i] = malloc((vim_cols + 2) * sizeof(char));
-        vim_str_save[i] = malloc((vim_cols + 2)* sizeof(char));
     } 
     vim_lines = lines * 5;
 }
@@ -182,59 +199,6 @@ void set_str_from_vim(){
         line++;
     }
     str_lines = line;
-}
-
-void vim_set_str(){
-
-    char ch,before = 0;
-    int line = 0;
-    int pos = 0;
-    int count = 0;
-
-    for(int i = 0; i < str_lines;i++){
-        for(int j = 0; j < strlen(vim_str[i]); j++){
-            ch = vim_str[i][j];
-
-            if(line >= vim_lines){
-                vim_edit_str_lines(line);
-            }
-
-            if(pos >= vim_cols){
-                line++;
-                pos = 0;
-            }
-            
-    
-            if(ch == '\n'){
-                vim_str_save[line][pos] = ch;
-                line++;
-                pos = 0;
-                count++;
-                before = ch;
-                vim_str_save[line][pos] = '\0';
-                continue;
-            }
-
-            vim_str_save[line][pos] = ch;
-            pos++;
-            count++;
-            vim_str_save[line][pos] = '\0';
-            before = ch;
-        }
-    }
-
-    if(before != '\n' && count != 0){
-        vim_str_save[line][pos] = '\n';
-        pos++;
-        count++;
-        vim_str_save[line][pos] = '\0';
-        line++;
-    }
-   
-    str_lines = line;
-    for(int i = 0; i < str_lines;i++){
-        strcpy(vim_str[i],vim_str_save[i]);
-    }
 }
 
 void vim_make_screen(){

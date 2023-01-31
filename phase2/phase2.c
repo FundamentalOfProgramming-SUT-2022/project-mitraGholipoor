@@ -1,6 +1,18 @@
 #include "libs/phase1.h"
 #include "libs/phase2.h"
 
+/*
+
+up : KEY_UP
+down: KEY_DOWN
+right: RIGHT
+left: LEFT
+insert mode: i
+virtual mode: v
+back to normal :ESC
+
+*/
+
 
 int main(int argc, char *argv[]){	
 
@@ -25,12 +37,28 @@ int main(int argc, char *argv[]){
 			vim_handle_navbar(ch);
 		}else if(ch == 27){
 			vim_mode = 0;
+			delete_virtual();
 			vim_make_vim_mode();
+			
+			move(0,8);
+			if(str_lines > 4){
+				move(4,8);
+			}
+			
+			refresh();
 		}else if(vim_mode == 0 && (vim_mode == ':' || vim_mode == '/')){
 			//
-		}else if(vim_mode == 0){
+		}else if(vim_mode == 0 && ch == 'i'){
 			vim_mode = 1;
 			vim_make_vim_mode();
+			move(y,x);
+			refresh();
+		}else if(vim_mode == 0 && ch == 'v'){
+			vim_mode = 2;
+			vir_y = y + vim_diff;
+			vir_x = x - 8;
+			vim_make_vim_mode();
+			vim_make_vir_coor();
 			move(y,x);
 			refresh();
 		}else if(vim_mode == 1 && ch == 8){
@@ -62,6 +90,14 @@ int main(int argc, char *argv[]){
 				vim_insert(ch,0);
 				move(y,x+1);
 			}
+		}
+
+		if(vim_mode == 2){
+			int xx,yy;
+			getyx(stdscr,yy,xx);
+			select_virtual_area(yy,xx);
+			move(yy,xx);
+			refresh();
 		}
 		
 	}
