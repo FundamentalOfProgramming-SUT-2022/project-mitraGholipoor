@@ -10,7 +10,8 @@ left: LEFT
 insert mode: i
 virtual mode: v
 back to normal :ESC
-
+copy : y
+cut :d
 
 */
 
@@ -19,7 +20,7 @@ int main(int argc, char *argv[]){
 
 	int ch;
 	int x,y;
-
+	char str[1000];
 	initscr();
 	cbreak();	
 	noecho();
@@ -43,16 +44,8 @@ int main(int argc, char *argv[]){
 		if(ch == KEY_RIGHT || ch == KEY_LEFT || ch == KEY_UP || ch == KEY_DOWN){
 			vim_handle_navbar(ch);
 		}else if(ch == 27){
-			vim_mode = 0;
-			delete_virtual();
-			vim_make_vim_mode();
-			
-			move(0,8);
-			if(str_lines > 4){
-				move(4,8);
-			}
-			
-			refresh();
+			vim_change_mode_to_normal(0);
+			move(y,x);
 		}else if(vim_mode == 0 && (vim_mode == ':' || vim_mode == '/')){
 			//
 		}else if(vim_mode == 0 && ch == 'i'){
@@ -67,6 +60,27 @@ int main(int argc, char *argv[]){
 			vim_make_vim_mode();
 			move(y,x);
 			refresh();
+		}else if(vim_mode == 0 && ch == 'p'){
+			vim_paste();
+			move(y,x);
+		}else if(vim_mode == 0 && ch == ':'){
+
+			move(LINES - 1,0);
+			addch(':');
+			echo();
+			getstr(str);
+			noecho();
+			if(strlen(str) < 2){
+            	//handle_err(-1);
+            	continue;
+			}
+			if(str[strlen(str)-1] == '\n'){
+				str[strlen(str)-1] = '\0';
+			}
+			vim_check_the_command(str);
+			refresh();
+		}else if(vim_mode == 0 && ch == '='){
+			vim_auto_indent();
 		}else if(vim_mode == 1 && ch == 8){
 			if(x == 8){
 				if(vim_diff){
@@ -109,19 +123,9 @@ int main(int argc, char *argv[]){
 		}else if(vim_mode == 2 && ch == 'd'){
 			vim_cut();
 			set_str_from_vim();
-			if(vim_diff){
-				vim_make_screen();
-			}else{
-				vim_make_screen_1();
-			}
-			vim_mode = 0;
-			delete_virtual();
-			vim_make_vim_mode();
-			move(0,8);
-			if(str_lines > 4){
-				move(4,8);
-			}
-			refresh();
+			vim_diff = 0;
+			vim_make_screen();
+			vim_change_mode_to_normal(1);
 		}
 		
 	}

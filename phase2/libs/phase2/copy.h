@@ -100,25 +100,30 @@ int vim_copy_to_clipboard(){
 }
 
 void vim_copy(){
+
+    vim_mode = 0;
+    
+    vim_make_vim_mode();
+
+
+
     if(vim_selected != 0){
         int err = vim_copy_to_clipboard();
         if(err == 1){
-            vim_mode = 0;
-			delete_virtual();
-			vim_make_vim_mode();
-            
-
-            init_pair(13, COLOR_WHITE,COLOR_BLACK);
-            attron(COLOR_PAIR(13));
 			move(LINES - 1,0);
             printw("copied to clipboard!");
-
-
-			move(0,8);
-			if(str_lines > 4){
-				move(4,8);
-			}
-			refresh();
+        }else{
+            move(LINES - 1,0);
+            printw("error:(");  
         }
+    }else{
+		move(LINES - 1,0);
+        printw("no selected item");
     }
+    delete_virtual();
+    move(0,8);
+    if(str_lines > 4 && vim_diff != 0){
+        move(3,8);
+    }
+    refresh();
 }

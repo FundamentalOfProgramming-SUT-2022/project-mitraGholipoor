@@ -121,5 +121,13 @@ int vim_cut_to_clipboard(){
 void vim_cut(){
     if(vim_selected != 0){
         int err = vim_cut_to_clipboard();
+        if(err == 1){
+            vim_save = 0;
+            strcpy(vim_massage,"cut to clipboard!\0");
+        }else{
+            strcpy(vim_massage,"error:(\0");
+        }
+    }else{
+        strcpy(vim_massage,"no selected item\0");
     }
 }

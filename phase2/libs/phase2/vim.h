@@ -4,12 +4,12 @@
 
 char vim_address[1000];
 char vim_bs_name[1000];
-char vim_save_address[] = "./.vim.txt";
+char vim_save_address[1000];
 int has_name = 0;
 
 long long str_lines = 0;
 int vim_end_screen;
-int vim_diff = 0;
+long long vim_diff = 0;
 
 long long vim_lines = 100;
 int vim_cols = 100;
@@ -27,6 +27,13 @@ long long vir_y_start = 0;
 
 
 int vim_selected = 0;
+char vim_massage[100] = "\0";
+
+
+void vim_make_screen_2();
+void handel_phase1_command_1();
+void handel_phase1_command_2();
+void vim_handle_err(int err);
 
 void vim_make_str(){
 
@@ -41,10 +48,10 @@ void vim_make_str(){
 
 }
 
-void vim_edit_str_lines(int lines){
+void vim_edit_str_lines(long long lines){
 
     vim_str = realloc(vim_str,lines * 5 * sizeof(char *));
-    for(int i = vim_lines ; i <= lines * 5; i++){
+    for(long long i = vim_lines ; i <= lines * 5; i++){
         vim_str[i] = malloc((vim_cols + 2) * sizeof(char));
     } 
     vim_lines = lines * 5;
@@ -57,10 +64,9 @@ void clear_cmd_bar(){
 
 void make_vim_file(){
 
-    char address[1000];
-    strcpy(address,here);
-    strcat(address,"/.vim.txt");
-    FILE* file = fopen(address, "w");
+    strcpy(vim_save_address,here);
+    strcat(vim_save_address,"/.vim.txt");
+    FILE* file = fopen(vim_save_address, "w");
     fclose(file);
     
 }
@@ -68,7 +74,6 @@ void make_vim_file(){
 void vim_make_vim_mode(){
 
 	int y,x;
-
 
 
 
@@ -142,9 +147,9 @@ void set_str_from_vim(){
     FILE * fp;
     char ch,before = 0;
     fp=fopen(vim_save_address,"r");
-    int line = 0;
+    long long line = 0;
     int pos = 0;
-    int count = 0;
+    long long count = 0;
     while(1){
 
         ch = fgetc(fp);
@@ -189,28 +194,81 @@ void set_str_from_vim(){
         line++;
     }
     str_lines = line;
+    if((str_lines - vim_end_screen - 4) < vim_diff){
+        vim_diff = 0;
+    }
+}
+
+void set_str_from_file(){
+    if(has_name){
+        FILE * fp;
+        char ch,before = 0;
+        fp=fopen(vim_address,"r");
+        long long line = 0;
+        int pos = 0;
+        long long count = 0;
+        while(1){
+
+            ch = fgetc(fp);
+            if(feof(fp)){
+                break;
+            }
+
+            if(line >= vim_lines){
+                vim_edit_str_lines(line);
+            }
+
+            if(pos >= vim_cols){
+                line++;
+                pos = 0;
+            }
+
+            if(ch == '\n'){
+                vim_str[line][pos] = ch;
+                line++;
+                pos = 0;
+                count++;
+                vim_str[line][pos] = ' ';
+                vim_str[line][pos + 1] = '\0';
+                before = ch;
+                continue;
+            }
+
+            vim_str[line][pos] = ch;
+            pos++;
+            count++;
+            vim_str[line][pos] = '\0';
+            before = ch;
+        }
+
+        if(before != '\n' && count != 0){
+            vim_str[line][pos] = '\n';
+            pos++;
+            count++;
+            vim_str[line][pos] = '\0';
+        }
+        if(count != 0){
+            line++;
+        }
+        str_lines = line;  
+        if((str_lines - vim_end_screen - 4) < vim_diff){
+            vim_diff = 0;
+        }
+    }      
 }
 
 void vim_make_screen(){
-    clear();
-    move(0,0);
-    for(int i = vim_diff ; i < vim_end_screen + vim_diff ;i++){
-        move(i- vim_diff,0);
-        printw("%6.d| %s",i+1,vim_str[i]);
-        move(i- vim_diff + 1,0);
-    }
-    vim_make_vim_mode();
-    refresh();
-}
 
-void vim_make_screen_1(){
     clear();
     move(0,0);
-    if(str_lines >= vim_end_screen){
-        for(int i = 0; i < vim_end_screen;i++){
+    if(str_lines == 0){
+        vim_make_screen_2();
+    }else if(str_lines >= vim_end_screen){
+        for(long long i = vim_diff ; i < vim_end_screen + vim_diff ;i++){
+            move(i- vim_diff,0);
             printw("%6.d| %s",i+1,vim_str[i]);
-            move(i+1,0);
-        }
+            move(i- vim_diff + 1,0);
+        }   
     }else{
         for(int i = 0; i < str_lines;i++){
             printw("%6.d| %s",i+1,vim_str[i]);
@@ -224,6 +282,7 @@ void vim_make_screen_1(){
         }
         attroff(COLOR_PAIR(3));
     }
+
     vim_make_vim_mode();
     refresh();
 }
@@ -247,7 +306,7 @@ void vim_make_screen_2(){
 void vim_make_screen_3(){
     clear();
     move(0,0);
-    for(int i = vim_diff ; i < vim_end_screen + vim_diff ;i++){
+    for(long long i = vim_diff ; i < vim_end_screen + vim_diff ;i++){
         move(i- vim_diff,0);
         printw("%6.d| %s",i+1,vim_str[i]);
         move(i- vim_diff + 1,0);
@@ -341,3 +400,13 @@ void vim_handle_navbar(int ch){
         
     }
 }
+
+void vim_make_massage_in_cmd_bar(){
+    if(strlen(vim_massage) != 0){
+        move(LINES - 1, 0);
+        printw("%s",vim_massage);
+        vim_massage[0] = '\0';
+    }
+}
+
+

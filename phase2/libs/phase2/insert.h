@@ -1,4 +1,4 @@
-int vim_insert_to_vim(char str[],int line ,int pos){
+int vim_insert_to_vim(char str[],long long line ,int pos){
     
     int check = 0;
     char proccess[1000];
@@ -109,7 +109,7 @@ int vim_insert_to_vim(char str[],int line ,int pos){
 }
 
 void vim_insert(int ascii,int shift){
-
+    vim_save = 0;
     char ch = (char)ascii;
     char str[10] = "a\0";
     str[0] = ch;
@@ -119,7 +119,7 @@ void vim_insert(int ascii,int shift){
     int x,y;
     getyx(stdscr, y, x);
     x = x - 8;
-    int Y = y + vim_diff;
+    long long Y = y + vim_diff;
 
 
     int err = vim_insert_to_vim(str,Y+1,x);
@@ -127,12 +127,9 @@ void vim_insert(int ascii,int shift){
         vim_diff++;
         set_str_from_vim();
         vim_make_screen_3();
-    }else if(vim_diff){
-        set_str_from_vim();
-        vim_make_screen();
     }else{
         set_str_from_vim();
-        vim_make_screen_1();
+        vim_make_screen();
     }
     refresh();
 }

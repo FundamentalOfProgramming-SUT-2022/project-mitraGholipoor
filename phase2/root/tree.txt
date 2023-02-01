@@ -1,0 +1,9 @@
+
+    |
+    |_test.doc
+    |
+    |_r.tnt
+    |
+    |_____new.tnt
+    |
+    |_____tt.tnt

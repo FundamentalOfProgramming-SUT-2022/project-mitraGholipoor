@@ -83,10 +83,10 @@ int check_file_exist(char address[]){
     
     char * need = (char *) calloc(MAX_SIZE,sizeof(char));
     char * add = (char *) calloc(MAX_SIZE,sizeof(char));
-    strcpy(add,here_with_root);
+    strcpy(add,here);
     strcpy(need,address);
     char *ptr = need;
-    ptr += strlen(here_with_root);
+    ptr += strlen(here);
     char *token = strtok(ptr,"/");
     valid = 0;
     while(1)

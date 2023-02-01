@@ -120,16 +120,14 @@ void vim_remove(int shift){
 
     int err = vim_remove_from_vim(Y+1,x);
     if(err == 1){
+        vim_save = 0;
         if(shift){
             vim_diff--;
             set_str_from_vim();
             vim_make_screen_4();
-        }else if(vim_diff){
-            set_str_from_vim();
-            vim_make_screen();
         }else{
             set_str_from_vim();
-            vim_make_screen_1();
+            vim_make_screen();
         }
         refresh(); 
     }

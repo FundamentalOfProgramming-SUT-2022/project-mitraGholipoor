@@ -58,12 +58,3 @@ void select_virtual_area(int y,int x){
     refresh();  
 }
 
-void delete_virtual(){
-    vir_x = -1;
-    vir_y = -1;
-
-    vir_x_start = -1;
-    vir_y_start = -1;
-    vim_selected = 0;
-    select_virtual_area(vim_diff,0);
-}

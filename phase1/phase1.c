@@ -140,8 +140,7 @@ int main(){
 
     fgets(str,1000,stdin);
     
-    while (strcmp(str,"stop\n") != 0)
-    {
+    while (strcmp(str,"stop\n") != 0){
         
         if(strlen(str) < 2){
             handle_err(-1);

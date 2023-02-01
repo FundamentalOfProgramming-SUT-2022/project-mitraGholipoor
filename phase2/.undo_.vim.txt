@@ -1,0 +1,13 @@
+root:
+    |
+    |_test.txt
+    |
+    |_t.t
+    |
+    |_tree.txt
+    |
+    |_r.txt
+    |
+    |_new.txt
+    |
+    |_tt.txt
