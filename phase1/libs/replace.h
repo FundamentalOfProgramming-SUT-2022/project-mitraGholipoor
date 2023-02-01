@@ -74,7 +74,8 @@ int compile_str1(char str[],char str1[]){
         char * add = str_replace(str_str,"+qot10446+","\"");
         add = str_replace(add,"+newline10448+","\n");
         add = str_replace(add,"+main_newline10447+","\\n");
-        add = str_replace(add,"+star10449+","*");
+        add = str_replace(add,"+star10449+","\\*");
+        add = str_replace(add,".","\\.");
         add = str_replace(add,"+astrick10450+","[^[:space:]]*");
 
         strcat(str1,add);

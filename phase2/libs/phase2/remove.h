@@ -83,7 +83,7 @@ int vim_remove_from_vim(int line,int pos){
     if(end >= count){
         end = count - 1;
     }
-
+    do_undo(address);
     file = fopen(address, "r");
     FILE* fp = fopen(proccess,"w");
 

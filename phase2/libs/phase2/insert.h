@@ -73,7 +73,7 @@ int vim_insert_to_vim(char str[],long long line ,int pos){
         return -5;
     }
 
-
+    do_undo(address);
     file = fopen(address, "r");
     FILE* fp = fopen(proccess,"w");
 

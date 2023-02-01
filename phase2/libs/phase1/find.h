@@ -14,6 +14,7 @@ int compile_str_find(char str[],char str1[]){
         add = str_replace(add,"+newline10448+","\n");
         add = str_replace(add,"+main_newline10447+","\\n");
         add = str_replace(add,"+star10449+","\\*");
+        add = str_replace(add,".","\\.");
         add = str_replace(add,"+astrick10450+","[^[:space:]]*");
 
         strcat(str1,add);

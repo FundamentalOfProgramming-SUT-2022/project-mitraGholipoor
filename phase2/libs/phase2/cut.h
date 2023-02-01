@@ -16,7 +16,6 @@ int vim_cut_to_clipboard(){
     strcat(proccess,"/.proccess.txt");
 
     long long count  = get_size_of_file(address);
-
     FILE* file = fopen(address, "r");
     char ch;
     long long i = 1;
@@ -80,6 +79,7 @@ int vim_cut_to_clipboard(){
         end = count - 1;
     }
 
+    do_undo(address);
     file = fopen(address, "r");
     FILE* fp = fopen(proccess,"w");
 

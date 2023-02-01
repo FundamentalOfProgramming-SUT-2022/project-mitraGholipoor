@@ -12,6 +12,9 @@
 #include "phase2/replace.h"
 #include "phase2/auto-indent.h"
 #include "phase2/arman.h"
+#include "phase2/undo.h"
+#include "phase2/find.h"
+
 
 
 void vim_save_output_in_vim(){
@@ -44,6 +47,7 @@ void handel_phase1_command_2(){
     vim_save_output_in_vim();
     set_str_from_vim();
     vim_address[0] = '\0';
+    vim_bs_name[0] = '\0';
     has_name = 0;
     vim_save = 0;
     vim_diff = 0;
@@ -197,11 +201,10 @@ void vim_check_the_command(char str[]){
             }
             
         }else if(strcmp(token,"undo") == 0){
-            int err = undo(str);
+            int err = vim_undo(str);
             if (err != 1){
                 vim_handle_err(err);
             }else{
-                handel_phase1_command_1();
                 strcpy(vim_massage,"done!\0");
                 vim_change_mode_to_normal(1);
             }

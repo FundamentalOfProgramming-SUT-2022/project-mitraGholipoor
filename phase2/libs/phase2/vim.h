@@ -30,10 +30,20 @@ int vim_selected = 0;
 char vim_massage[100] = "\0";
 
 
+
 void vim_make_screen_2();
 void handel_phase1_command_1();
 void handel_phase1_command_2();
 void vim_handle_err(int err);
+
+
+long long  vim_results_find[1000][2] = {0};
+int vim_count_find = 0;
+int vim_find_mode = 0;
+
+
+
+
 
 void vim_make_str(){
 
@@ -77,7 +87,7 @@ void vim_make_vim_mode(){
 
 
 
-	if(vim_mode == 0){
+	if(vim_mode == 0 || vim_mode == 3){
 		init_pair(1, COLOR_BLACK,COLOR_CYAN);
 		move(LINES - 2,0);
 		attron(COLOR_PAIR(1));
