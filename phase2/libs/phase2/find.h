@@ -122,7 +122,7 @@ void move_cursor(int count){
         for(int j = 0 ;j < strlen(vim_str[i]); j++){
             if(n == pos){
                 if(i > vim_end_screen){
-                    vim_diff = i - vim_end_screen;
+                    vim_diff = i - vim_end_screen + 1;
                     vim_make_screen();
                     high_light_find();
                     move(i,j + 8);

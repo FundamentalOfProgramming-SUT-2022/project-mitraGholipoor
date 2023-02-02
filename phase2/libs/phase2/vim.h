@@ -401,7 +401,7 @@ void vim_handle_navbar(int ch){
                     move(y+1,strlen(vim_str[y+ vim_diff +1]) + 7);
                 }
                 refresh();
-            }else if(y + 1 >= vim_end_screen - 4 && y + 1 < vim_end_screen ){
+            }else if(y + 1 >= vim_end_screen - 4 && y + 1 < str_lines){
                 vim_diff++;
                 vim_make_screen();
                 if(strlen(vim_str[y + vim_diff]) + 7 >= x){
