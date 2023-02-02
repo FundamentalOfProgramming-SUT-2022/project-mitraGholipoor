@@ -44,12 +44,13 @@ int main(int argc, char *argv[]){
 		move(y,x);
 		refresh();
 
-		if(vim_mode == 3 && ( ch <= '9' && ch >= '1')){
+		if(vim_mode == 3 && ch == 'n'){
 			move(y,x);
-			if(vim_count_find >= ch - '0'){
-				move_cursor(ch - '0');
-			}else if(vim_count_find){
-				move_cursor(1);
+			if(vim_count_find){
+				int r = move_cursor(y,x);
+				if(!r){
+					move_cursor_1(1);
+				}
 			}
 		}else if(vim_mode == 3){
 			vim_make_screen();

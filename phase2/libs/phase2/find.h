@@ -114,7 +114,66 @@ void high_light_find(){
     refresh();  
 }
 
-void move_cursor(int count){
+int is_high_light(int pos){
+    for(int i = 1; i<=vim_count_find ; i++){
+        if(vim_results_find[i][0] == pos){
+            return 1;
+        }
+        if(pos < vim_results_find[i][0]){
+            return 0;
+        }
+    }
+    return 0;
+}
+
+int move_cursor(int y,int x){
+    clear();
+    int n = 0;
+    for(int i = 0; i < str_lines;i++){
+        for(int j = 0 ;j < strlen(vim_str[i]); j++){
+            if(is_high_light(n)){
+                if(y  + vim_diff < i){
+                    if(i > vim_end_screen){
+                        vim_diff = i - vim_end_screen + 1;
+                        vim_make_screen();
+                        high_light_find();
+                        move(i - vim_diff ,j + 8);
+                        return 1;
+                    }else{
+                        vim_diff = 0;
+                        vim_make_screen();
+                        high_light_find();
+                        move(i,j + 8);
+                        return 1;
+                    }
+                }
+                if(y  + vim_diff  == i && x - 8 < j){
+                    if(i > vim_end_screen){
+                        vim_diff = i - vim_end_screen + 1;
+                        vim_make_screen();
+                        high_light_find();
+                        move(i - vim_diff ,j + 8);
+                        return 1;
+                    }else{
+                        vim_diff = 0;
+                        vim_make_screen();
+                        high_light_find();
+                        move(i,j + 8);
+                        return 1;
+                    }
+                }
+            }
+            n++;
+            if(vim_str[i][j] == '\n'){
+                vim_str[i][j + 1] = '\0';
+                break;
+            }
+        }
+    }
+    return 0;
+}
+
+void move_cursor_1(int count){
     clear();
     int pos = vim_results_find[count][0];
     int n = 0;
@@ -139,7 +198,6 @@ void move_cursor(int count){
         }
     }
 }
-
 
 void vim_find(char str[]){
     char * add = str_replace(str,".","\\.");
