@@ -142,5 +142,8 @@ void move_cursor(int count){
 
 
 void vim_find(char str[]){
+    char * add = str_replace(str,".","\\.");
+    add = str_replace(add,"*","\\*");
+    strcpy(str,add);
     vim_find_regex(vim_save_address,str,-1);
 }

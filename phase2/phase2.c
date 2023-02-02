@@ -102,13 +102,20 @@ int main(int argc, char *argv[]){
 				echo();
 				getstr(str);
 				noecho();
-				if(strlen(str) < 2){
+				if(strlen(str) == 0){
 					vim_handle_err(-1);
 					continue;
 				}
+
 				if(str[strlen(str)-1] == '\n'){
 					str[strlen(str)-1] = '\0';
 				}
+				
+				if(strlen(str) == 0){
+					vim_handle_err(-1);
+					continue;
+				}
+
 				vim_find(str);
 				refresh();
 				
