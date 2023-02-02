@@ -131,24 +131,9 @@ int move_cursor(int y,int x){
     int n = 0;
     for(int i = 0; i < str_lines;i++){
         for(int j = 0 ;j < strlen(vim_str[i]); j++){
-            if(is_high_light(n)){
-                if(y  + vim_diff < i){
-                    if(i > vim_end_screen){
-                        vim_diff = i - vim_end_screen + 1;
-                        vim_make_screen();
-                        high_light_find();
-                        move(i - vim_diff ,j + 8);
-                        return 1;
-                    }else{
-                        vim_diff = 0;
-                        vim_make_screen();
-                        high_light_find();
-                        move(i,j + 8);
-                        return 1;
-                    }
-                }
-                if(y  + vim_diff  == i && x - 8 < j){
-                    if(i > vim_end_screen){
+            if(y  + vim_diff < i || (y  + vim_diff  == i && x - 8 < j)){
+                if(is_high_light(n)){
+                    if(i >= vim_end_screen){
                         vim_diff = i - vim_end_screen + 1;
                         vim_make_screen();
                         high_light_find();
@@ -163,6 +148,7 @@ int move_cursor(int y,int x){
                     }
                 }
             }
+            
             n++;
             if(vim_str[i][j] == '\n'){
                 vim_str[i][j + 1] = '\0';
