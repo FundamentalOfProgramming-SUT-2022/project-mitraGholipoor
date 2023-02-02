@@ -37,7 +37,8 @@ void handel_phase1_command_2();
 void vim_handle_err(int err);
 
 
-long long  vim_results_find[1000][2] = {0};
+long long **vim_results_find;
+long long vim_results_find_size;
 int vim_count_find = 0;
 int vim_find_mode = 0;
 
@@ -432,4 +433,11 @@ void vim_make_massage_in_cmd_bar(){
     }
 }
 
-
+long long ** make_vim_results_find(){
+    long long  **results = (long long **) malloc(sizeof(long long *) * MAX_SIZE);
+    for(int i = 0 ; i < MAX_SIZE;i++){
+        results[i] = (long long *) malloc(sizeof(long long) * 3);
+    }
+    vim_results_find_size = MAX_SIZE;
+    return results;
+}

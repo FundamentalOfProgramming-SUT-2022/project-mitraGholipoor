@@ -31,6 +31,13 @@ int vim_find_regex(char address[], char pattern[],long long at){
         size_t     nmatch = 1;
         regmatch_t pmatch[1];
 
+        if(at_where >= vim_results_find_size){
+            vim_results_find = realloc(vim_results_find,sizeof(long long *) * at_where * 2);
+            for(int i = at_where ; i < at_where * 2;i++){
+                vim_results_find[i] = (long long *)malloc(sizeof(long long) *3);
+            }
+            vim_results_find_size = at_where;
+        }
 
         if(where >= count){
             vim_results_find[at_where][0] = -1;

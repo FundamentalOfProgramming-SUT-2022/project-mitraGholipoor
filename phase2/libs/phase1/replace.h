@@ -193,7 +193,14 @@ int replace_regex(char address[], char pattern[],char str2[],long long at,int ha
     fclose(file);
     str[i] ='\0';
 
-    long long  results [1000][2] = {0};
+    long long  **results = (long long **) malloc(sizeof(long long *) * MAX_SIZE);
+    for(int i = 0 ; i < MAX_SIZE;i++){
+        results[i] = (long long *) malloc(sizeof(long long) * 3);
+    }
+
+    long long size_size = MAX_SIZE;
+
+
     char * string = str;
     long long where = 0;
     long long  at_where = 1;
@@ -205,6 +212,13 @@ int replace_regex(char address[], char pattern[],char str2[],long long at,int ha
         size_t     nmatch = 1;
         regmatch_t pmatch[1];
 
+        if(at_where >= size_size){
+            results = realloc(results,sizeof(long long *) * at_where * 2);
+            for(int i = at_where ; i < at_where * 2;i++){
+                results[i] = (long long *)malloc(sizeof(long long) *3);
+            }
+            size_size = at_where;
+        }
 
         if(where >= count){
             results[at_where][0] = -1;
