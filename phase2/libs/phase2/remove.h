@@ -123,12 +123,9 @@ void vim_remove(int shift){
         vim_save = 0;
         if(shift){
             vim_diff--;
-            set_str_from_vim();
-            vim_make_screen_4();
-        }else{
-            set_str_from_vim();
-            vim_make_screen();
         }
+        set_str_from_vim();
+        vim_make_screen();
         refresh(); 
     }
 

@@ -28,7 +28,11 @@ int main(int argc, char *argv[]){
 	keypad(stdscr, TRUE);	
 
 	//------------------------------
-
+	init_pair(11, COLOR_BLACK,COLOR_YELLOW);
+	init_pair(21, COLOR_YELLOW,COLOR_BLACK);
+	init_pair(22, COLOR_BLUE,COLOR_BLACK);
+	init_pair(23, COLOR_WHITE,COLOR_BLACK);
+	//------------------------------
 	vim_make_str();	
 	init_win_layout(argc,argv);
 
@@ -82,7 +86,7 @@ int main(int argc, char *argv[]){
 				getstr(str);
 				noecho();
 				if(strlen(str) < 2){
-					//handle_err(-1);
+					vim_handle_err(-1);
 					continue;
 				}
 				if(str[strlen(str)-1] == '\n'){
@@ -98,6 +102,10 @@ int main(int argc, char *argv[]){
 				echo();
 				getstr(str);
 				noecho();
+				if(strlen(str) < 2){
+					vim_handle_err(-1);
+					continue;
+				}
 				if(str[strlen(str)-1] == '\n'){
 					str[strlen(str)-1] = '\0';
 				}

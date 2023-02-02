@@ -109,6 +109,7 @@ int vim_insert_to_vim(char str[],long long line ,int pos){
 }
 
 void vim_insert(int ascii,int shift){
+    
     vim_save = 0;
     char ch = (char)ascii;
     char str[10] = "a\0";
@@ -125,11 +126,8 @@ void vim_insert(int ascii,int shift){
     int err = vim_insert_to_vim(str,Y+1,x);
     if(shift){
         vim_diff++;
-        set_str_from_vim();
-        vim_make_screen_3();
-    }else{
-        set_str_from_vim();
-        vim_make_screen();
     }
+    set_str_from_vim();
+    vim_make_screen();
     refresh();
 }

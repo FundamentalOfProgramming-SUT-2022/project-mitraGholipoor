@@ -85,9 +85,6 @@ int should_high_light(int pos){
 void high_light_find(){
     char ch;
     int count=0;
-    init_pair(11, COLOR_BLACK,COLOR_YELLOW);
-    init_pair(12, COLOR_WHITE,COLOR_BLACK);
-
     for(int i = 0; i < str_lines;i++){
         for(int j = 0 ;j < strlen(vim_str[i]); j++){
             if(should_high_light(count)){
@@ -100,8 +97,16 @@ void high_light_find(){
             }else if(vim_diff <= i && i < vim_end_screen + vim_diff){
                     move(i - vim_diff , j + 8);
                     ch  = inch();
-                    attron(COLOR_PAIR(12));
-                    addch(ch);
+                    if(ch == '(' || ch == ')'){
+                        attron(COLOR_PAIR(21));
+                        addch(ch); 
+                    }else if(ch == '{' || ch == '}'){
+                        attron(COLOR_PAIR(22));
+                        addch(ch); 
+                    }else{
+                        attron(COLOR_PAIR(23));
+                        addch(ch); 
+                    }
             }
             count++;
         }

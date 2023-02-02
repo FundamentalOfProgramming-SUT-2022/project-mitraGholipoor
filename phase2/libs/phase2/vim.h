@@ -78,6 +78,8 @@ void make_vim_file(){
     strcat(vim_save_address,"/.vim.txt");
     FILE* file = fopen(vim_save_address, "w");
     fclose(file);
+    do_undo(vim_save_address);
+    mkdir(here_with_root,0777);
     
 }
 
@@ -204,7 +206,7 @@ void set_str_from_vim(){
         line++;
     }
     str_lines = line;
-    if((str_lines - vim_end_screen - 4) < vim_diff){
+    if( str_lines - vim_end_screen < vim_diff){
         vim_diff = 0;
     }
 }
@@ -261,7 +263,7 @@ void set_str_from_file(){
             line++;
         }
         str_lines = line;  
-        if((str_lines - vim_end_screen - 4) < vim_diff){
+        if( str_lines - vim_end_screen < vim_diff){
             vim_diff = 0;
         }
     }      
@@ -276,12 +278,47 @@ void vim_make_screen(){
     }else if(str_lines >= vim_end_screen){
         for(long long i = vim_diff ; i < vim_end_screen + vim_diff ;i++){
             move(i- vim_diff,0);
-            printw("%6.d| %s",i+1,vim_str[i]);
+            printw("%6.d| ",i+1);
+            for(int j = 0; j < strlen(vim_str[i]);j++){
+                if(vim_str[i][j] == '(' || vim_str[i][j] == ')'){
+                    attron(COLOR_PAIR(21));
+                    addch(vim_str[i][j]); 
+                }else if(vim_str[i][j] == '{' || vim_str[i][j] == '}'){
+                    attron(COLOR_PAIR(22));
+                    addch(vim_str[i][j]); 
+                }else{
+                   attron(COLOR_PAIR(23));
+                   addch(vim_str[i][j]); 
+                }
+                
+                if(vim_str[i][j] == '\n'){
+                    vim_str[i][j + 1] ='\0';
+                    break;
+                }
+            }
+            
             move(i- vim_diff + 1,0);
         }   
     }else{
         for(int i = 0; i < str_lines;i++){
-            printw("%6.d| %s",i+1,vim_str[i]);
+            printw("%6.d| ",i+1);
+            for(int j = 0; j < strlen(vim_str[i]);j++){
+                if(vim_str[i][j] == '(' || vim_str[i][j] == ')'){
+                    attron(COLOR_PAIR(21));
+                    addch(vim_str[i][j]); 
+                }else if(vim_str[i][j] == '{' || vim_str[i][j] == '}'){
+                    attron(COLOR_PAIR(22));
+                    addch(vim_str[i][j]); 
+                }else{
+                   attron(COLOR_PAIR(23));
+                   addch(vim_str[i][j]); 
+                }
+                if(vim_str[i][j] == '\n'){
+                    vim_str[i][j+ 1] ='\0';
+                    break;
+                }
+            }
+            
             move(i+1,0);
         }
         init_pair(3,COLOR_BLUE, COLOR_BLACK);
@@ -313,30 +350,6 @@ void vim_make_screen_2(){
     refresh();
 }
 
-void vim_make_screen_3(){
-    clear();
-    move(0,0);
-    for(long long i = vim_diff ; i < vim_end_screen + vim_diff ;i++){
-        move(i- vim_diff,0);
-        printw("%6.d| %s",i+1,vim_str[i]);
-        move(i- vim_diff + 1,0);
-    }
-    vim_make_vim_mode();
-    refresh();
-}
-
-void vim_make_screen_4(){
-    clear();
-    move(0,0);
-    for(int i = vim_diff ; i < vim_end_screen + vim_diff ;i++){
-        move(i- vim_diff,0);
-        printw("%6.d| %s",i+1,vim_str[i]);
-        move(i- vim_diff + 1,0);
-    }
-    vim_make_vim_mode();
-    refresh();
-}
-
 void vim_handle_navbar(int ch){
     int x,y;
     getyx(stdscr, y, x);
@@ -362,7 +375,7 @@ void vim_handle_navbar(int ch){
             refresh();
         }else if(vim_diff != 0 && y - 1 == 3){
             vim_diff--;
-            vim_make_screen_4();
+            vim_make_screen();
             if(strlen(vim_str[y + vim_diff]) + 7 >= x){
                 move(y,x);
             }else{
@@ -381,16 +394,16 @@ void vim_handle_navbar(int ch){
     }else if(ch == KEY_DOWN){
         if((y + vim_diff + 1) < str_lines){
 
-            if(y + 1 < vim_end_screen && abs(str_lines - (y + vim_diff)) <= 4){
+            if(y + 1 < vim_end_screen && abs(str_lines - (y + vim_diff)) <= 5){
                 if(strlen(vim_str[y + vim_diff + 1]) + 7 >= x){
                     move(y+1,x);
                 }else{
                     move(y+1,strlen(vim_str[y+ vim_diff +1]) + 7);
                 }
                 refresh();
-            }else if(y + 1 == vim_end_screen - 3){
+            }else if(y + 1 >= vim_end_screen - 4 && y + 1 < vim_end_screen ){
                 vim_diff++;
-                vim_make_screen_3();
+                vim_make_screen();
                 if(strlen(vim_str[y + vim_diff]) + 7 >= x){
                     move(y,x);
                 }else{
@@ -398,7 +411,7 @@ void vim_handle_navbar(int ch){
                 }
                 refresh();
 
-            }else if(y + 1 < vim_end_screen - 3){
+            }else if(y + 1 < vim_end_screen - 4){
                 if(strlen(vim_str[y + vim_diff + 1]) + 7 >= x){
                     move(y+1,x);
                 }else{

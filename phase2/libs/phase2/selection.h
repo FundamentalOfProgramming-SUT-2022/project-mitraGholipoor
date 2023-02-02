@@ -6,8 +6,6 @@ void select_virtual_area(int y,int x){
     int first = 0;
     int second = 0;
     vim_selected = 0;
-    init_pair(11, COLOR_BLACK,COLOR_YELLOW);
-    init_pair(12, COLOR_WHITE,COLOR_BLACK);
 
     for(int i = 0; i < str_lines;i++){
         for(int j = 0 ;j < strlen(vim_str[i]); j++){
@@ -34,15 +32,22 @@ void select_virtual_area(int y,int x){
                     move(i - vim_diff , j + 8);
                     ch  = inch();
                     attron(COLOR_PAIR(11));
-                    
                     addch(ch);
                 }
                 vim_selected++;
             }else if(vim_diff <= i && i < vim_end_screen + vim_diff){
                     move(i - vim_diff , j + 8);
                     ch  = inch();
-                    attron(COLOR_PAIR(12));
-                    addch(ch);
+                    if(ch == '(' || ch == ')'){
+                        attron(COLOR_PAIR(21));
+                        addch(ch); 
+                    }else if(ch == '{' || ch == '}'){
+                        attron(COLOR_PAIR(22));
+                        addch(ch); 
+                    }else{
+                        attron(COLOR_PAIR(23));
+                        addch(ch); 
+                    }
             }
         
 

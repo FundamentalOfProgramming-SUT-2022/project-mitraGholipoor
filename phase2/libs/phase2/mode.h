@@ -12,6 +12,7 @@ void delete_virtual(){
 void vim_change_mode_to_normal(int massage){
     vim_mode = 0;
     delete_virtual();
+    vim_make_screen();
     vim_make_vim_mode();
     if(massage){
         vim_make_massage_in_cmd_bar();
