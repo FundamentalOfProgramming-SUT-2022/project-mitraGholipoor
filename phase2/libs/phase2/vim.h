@@ -376,14 +376,14 @@ void vim_handle_navbar(int ch){
         }else if(vim_diff != 0 && y - 1 == 3){
             vim_diff--;
             vim_make_screen();
-            if(strlen(vim_str[y + vim_diff]) + 7 >= x){
+            if(strlen(vim_str[y + vim_diff - 1]) + 7 >= x){
                 move(y,x);
             }else{
-                move(y,strlen(vim_str[y + vim_diff]) + 7);
+                move(y,strlen(vim_str[y + vim_diff - 1]) + 7);
             }
             refresh();
         }else if(vim_diff != 0){
-            if(strlen(vim_str[y + vim_diff - 1]) + 8 >= x){
+            if(strlen(vim_str[y + vim_diff - 1]) + 7 >= x){
                 move(y-1,x);
             }else{
                 move(y-1,strlen(vim_str[y + vim_diff -1]) + 7);
