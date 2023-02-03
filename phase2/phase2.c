@@ -139,7 +139,7 @@ int main(int argc, char *argv[]){
 				}
 			}else if(vim_mode == 1){
 				
-				if(x + 1 >= vim_cols + 8 || ch == '\n'){
+				if(x + 1 >= vim_cols + 9 || ch == '\n'){
 					if(y + 1 == vim_end_screen){
 
 						vim_insert(ch,1);

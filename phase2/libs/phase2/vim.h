@@ -54,7 +54,7 @@ void vim_make_str(){
     vim_str = (char **) malloc((vim_lines + 1)* sizeof(char *));
 
     for(int i=0; i<=vim_lines ; i++){
-        vim_str[i] = malloc((vim_cols + 2) * sizeof(char));
+        vim_str[i] = malloc((vim_cols + 5) * sizeof(char));
     }
 
 }
@@ -156,7 +156,7 @@ int vim_get_base_name(){
 }
 
 void set_str_from_vim(){
-        
+
     FILE * fp;
     char ch,before = 0;
     fp=fopen(vim_save_address,"r");
@@ -210,6 +210,7 @@ void set_str_from_vim(){
     if( str_lines - vim_end_screen < vim_diff){
         vim_diff = 0;
     }
+
 }
 
 void set_str_from_file(){
@@ -315,13 +316,15 @@ void vim_make_screen(){
                    addch(vim_str[i][j]); 
                 }
                 if(vim_str[i][j] == '\n'){
-                    vim_str[i][j+ 1] ='\0';
+                    vim_str[i][j+1] ='\0';
                     break;
                 }
+                
             }
             
             move(i+1,0);
         }
+
         init_pair(3,COLOR_BLUE, COLOR_BLACK);
         attron(COLOR_PAIR(3));
         for(int i = str_lines; i < vim_end_screen;i++){

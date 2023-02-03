@@ -1,5 +1,4 @@
 int vim_insert_to_vim(char str[],long long line ,int pos){
-    
     int check = 0;
     char proccess[1000];
     char address[1000];
@@ -13,7 +12,7 @@ int vim_insert_to_vim(char str[],long long line ,int pos){
 
     FILE* file = fopen(address, "r");
 
-    char ch,before = 0;
+    char ch;
     long long i = 1;
     long long j = 0;
     long long n = 0;
@@ -91,13 +90,11 @@ int vim_insert_to_vim(char str[],long long line ,int pos){
             fputs(str,fp);
         }
         fputc(ch,fp);
-        before == ch;
         n++;
     }
 
     if(n == start){
         fputs(str,fp);
-        before = str[0];
     }
 
     fclose(file);
