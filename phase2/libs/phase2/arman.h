@@ -12,17 +12,8 @@ int vim_handle_arman(char str[]){
     int a;
     char copy1[(a = strlen(cmd1))?a:10];
     char copy2[(a = strlen(cmd2))?a:10];
-
-    for(int i = 0 ; i< strlen(cmd1);i++){
-        copy1[i] = cmd1[i];
-    }
-    
-    for(int i = 0 ; i< strlen(cmd2);i++){
-        copy2[i] = cmd2[i];
-    }
-
-    
-
+    strcpy(copy1,cmd1);
+    strcpy(copy2,cmd2);
     char * token1 = strtok(copy1," ");
     char * token2 = strtok(copy2," ");
 

@@ -6,6 +6,7 @@ void vim_paste(){
         x = x - 8;
         long long Y = y + vim_diff;
         
+
         int err = vim_insert_to_vim(clipboard,Y+1,x);
         if(err == 1){
             vim_save = 0;
