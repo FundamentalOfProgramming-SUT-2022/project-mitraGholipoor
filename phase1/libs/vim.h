@@ -127,7 +127,7 @@ int check_file_exist(char address[]){
     return 1;
 }
 
-void  get_undo_address(char address[] ,char undo_address[]){
+void get_undo_address(char address[] ,char undo_address[]){
     check_file_exist(address);
     char undo_file[200]=".undo_";
     strcat(undo_file,file_name);

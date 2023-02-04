@@ -11,17 +11,22 @@ int paste_str(char str[]){
     if(err != 1){
         return err;
     }
-    if(check_file_exist(address) == 0){
-        return -6;
+
+    if((err= check_file_exist(address)) != 1){
+        return err;
     }
+
     int line=1,pos=0;
     err = get_pos(str,&line,&pos);
     if(err != 1){
         return err;
     }
-    err = insert_to_file(address,clipboard,line,pos);
-    if(err != 1){
-        return err;
+    if(clipboard != NULL && strlen(clipboard) > 0){
+        err = insert_to_file(address,clipboard,line,pos);
+        if(err != 1){
+            return err;
+        }
     }
+    
     return 1;
 }

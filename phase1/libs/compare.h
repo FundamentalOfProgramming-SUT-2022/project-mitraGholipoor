@@ -247,6 +247,10 @@ int compare(char address[],char address1[]){
     long long cnt = get_count_of_line(address);
     long long cnt1 = get_count_of_line(address1);
 
+    count += 100;
+    count1 += 100;
+
+
     char * str = (char *) malloc(count * sizeof(char));
     char *str1 = (char *) malloc(count1 * sizeof(char));
 
@@ -362,7 +366,6 @@ int compare(char address[],char address1[]){
             fgets(str,count,fp);
             fgets(str1,count1,fp1);
 
-
             if(str[strlen(str)-1] == '\n'){
                 str[strlen(str)-1] = '\0';
             }
@@ -382,6 +385,7 @@ int compare(char address[],char address1[]){
                 strcat(output,buffer);
                 strcat(output," ============\n");
                 strcat(output,str);
+                
                 if(str[strlen(str)-1] !='\n'){
                     strcat(output,"\n");
                 }

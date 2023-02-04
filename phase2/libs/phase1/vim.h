@@ -83,10 +83,10 @@ int check_file_exist(char address[]){
     
     char * need = (char *) calloc(MAX_SIZE,sizeof(char));
     char * add = (char *) calloc(MAX_SIZE,sizeof(char));
-    strcpy(add,here);
+    strcpy(add,here_with_root);
     strcpy(need,address);
     char *ptr = need;
-    ptr += strlen(here);
+    ptr += strlen(here_with_root);
     char *token = strtok(ptr,"/");
     valid = 0;
     while(1)
@@ -127,7 +127,7 @@ int check_file_exist(char address[]){
     return 1;
 }
 
-void  get_undo_address(char address[] ,char undo_address[]){
+void get_undo_address(char address[] ,char undo_address[]){
     check_file_exist(address);
     char undo_file[200]=".undo_";
     strcat(undo_file,file_name);
