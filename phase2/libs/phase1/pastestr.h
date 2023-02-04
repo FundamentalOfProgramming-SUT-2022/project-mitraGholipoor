@@ -19,9 +19,11 @@ int paste_str(char str[]){
     if(err != 1){
         return err;
     }
-    err = insert_to_file(address,clipboard,line,pos);
-    if(err != 1){
-        return err;
+    if(clipboard != NULL && strlen(clipboard) > 0){
+        err = insert_to_file(address,clipboard,line,pos);
+        if(err != 1){
+            return err;
+        }
     }
     return 1;
 }
