@@ -11,7 +11,7 @@ long long str_lines = 0;
 int vim_end_screen;
 long long vim_diff = 0;
 
-long long vim_lines = 100;
+long long vim_lines = 1000;
 int vim_cols = 100;
 int vim_mode = 0;
 int vim_save = 0;
@@ -51,10 +51,10 @@ void vim_make_str(){
     vim_end_screen = LINES - 3;
     vim_cols = COLS - 9;
 
-    vim_str = (char **) malloc((vim_lines + 1)* sizeof(char *));
+    vim_str = (char **) malloc((vim_lines)* sizeof(char *));
 
     for(int i=0; i<=vim_lines ; i++){
-        vim_str[i] = malloc((vim_cols + 5) * sizeof(char));
+        vim_str[i] = malloc((vim_cols + 10) * sizeof(char));
     }
 
 }
@@ -63,7 +63,7 @@ void vim_edit_str_lines(long long lines){
 
     vim_str = realloc(vim_str,lines * 5 * sizeof(char *));
     for(long long i = vim_lines ; i <= lines * 5; i++){
-        vim_str[i] = malloc((vim_cols + 2) * sizeof(char));
+        vim_str[i] = malloc((vim_cols + 10) * sizeof(char));
     } 
     vim_lines = lines * 5;
 }
@@ -196,7 +196,7 @@ void set_str_from_vim(){
         vim_str[line][pos] = '\0';
         before = ch;
     }
-
+    fclose(fp);
     if(before != '\n' && count != 0){
         vim_str[line][pos] = '\n';
         pos++;
@@ -210,7 +210,6 @@ void set_str_from_vim(){
     if( str_lines - vim_end_screen < vim_diff){
         vim_diff = 0;
     }
-
 }
 
 void set_str_from_file(){
@@ -254,7 +253,7 @@ void set_str_from_file(){
             vim_str[line][pos] = '\0';
             before = ch;
         }
-
+        fclose(fp);
         if(before != '\n' && count != 0){
             vim_str[line][pos] = '\n';
             pos++;
@@ -321,7 +320,6 @@ void vim_make_screen(){
                 }
                 
             }
-            
             move(i+1,0);
         }
 

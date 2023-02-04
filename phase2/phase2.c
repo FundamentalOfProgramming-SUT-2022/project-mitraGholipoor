@@ -128,7 +128,7 @@ int main(int argc, char *argv[]){
 				if(x == 8){
 					if(vim_diff){
 						vim_remove(1);
-						move(y,strlen(vim_str[y + vim_diff]) + 7);
+						move(y,strlen(vim_str[y + vim_diff - 1]) + 7);
 					}else if(y > 0){
 						vim_remove(0);
 						move(y - 1,strlen(vim_str[y - 1]) + 7);
@@ -141,7 +141,6 @@ int main(int argc, char *argv[]){
 				
 				if(x + 1 >= vim_cols + 9 || ch == '\n'){
 					if(y + 1 == vim_end_screen){
-
 						vim_insert(ch,1);
 						move(y,8);
 

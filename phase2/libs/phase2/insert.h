@@ -1,4 +1,5 @@
 int vim_insert_to_vim(char str[],long long line ,int pos){
+
     int check = 0;
     char proccess[1000];
     char address[1000];
